@@ -44,9 +44,9 @@ namespace documnets_demo
                 var user = new checkUser(table.Rows[0].ItemArray[0].ToString(), Convert.ToBoolean(table.Rows[0].ItemArray[2]));
 
                 MessageBox.Show("Вход выполнен успешно");
-                Form1 f1 = new Form1(user);
+                Form1 kv = new Form1(user);
                 this.Hide();
-                f1.ShowDialog();
+                kv.ShowDialog();
                 LoginBox.Text = "";
                 PassBox.Text = "";
             }
