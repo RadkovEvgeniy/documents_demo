@@ -82,12 +82,12 @@ namespace documnets_demo
             DataBase.OpenConnection();
             price.Load(new SqlCommand($"select * from Education_program where Names = '{comboBox2.SelectedItem.ToString()}'", DataBase.GetConnection()).ExecuteReader());
 
-            if(comboBox2.Text == "Механик")
+            if (comboBox2.Text == "Механик")
             {
                 textBox1.Text = price.Rows[0].ItemArray[4].ToString();
                 textBox2.Text = price.Rows[0].ItemArray[2].ToString();
-            }    
-            if(comboBox2.Text == "Преподаватель")
+            }
+            if (comboBox2.Text == "Преподаватель")
             {
                 textBox1.Text = price.Rows[1].ItemArray[4].ToString();
                 textBox2.Text = price.Rows[1].ItemArray[2].ToString();
@@ -109,6 +109,7 @@ namespace documnets_demo
             }
 
             DataBase.CloseConnection();
+            
         }
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)

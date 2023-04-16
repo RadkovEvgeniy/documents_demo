@@ -15,9 +15,11 @@ namespace documnets_demo
 {
     public partial class Form1 : Form
     {
+        int selectedrow;
+
         Image img;
+        string FIO;
         string kurs;
-        string obuh;
         string plat;
         string adres;
         string sum;
@@ -28,6 +30,8 @@ namespace documnets_demo
         public Form1(checkUser user)
         {
             InitializeComponent();
+            dataGridView1.Visible = false;
+            dataGridView2.Visible = false;
             this.WindowState = FormWindowState.Maximized;
             _user = user;
             label1.Text = $"{_user.Login} : {_user.Status}";
@@ -38,7 +42,7 @@ namespace documnets_demo
 
         }
 
-        public Bitmap DrawKvit(int nmb, string kurs, string obuh, string plat, string adres, string sum)
+        public Bitmap DrawKvit(int nmb, string kurs, string FIO, string plat, string adres, string sum)
         {
             Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             Graphics graphics = Graphics.FromImage(bmp);
@@ -63,8 +67,8 @@ namespace documnets_demo
             graphics.DrawString(@"БИК 012007084 (ОТДЕЛЕНИЕ ВОРОНЕЖ БАНКА РОССИИ/УФК по Воронежской 
                                     области г.Воронеж)", sfont, Brushes.Black, 210, 80);
             graphics.DrawString($"Договор: {nmb}", font, Brushes.Black, 210, 130);
-            graphics.DrawString($"ФИО обучающегося: {obuh}", font, Brushes.Black, 210, 170);
-            graphics.DrawString($"Назначение: Оплата за курс {kurs}", font, Brushes.Black, 210, 210);
+            graphics.DrawString($"ФИО обучающегося: {FIO}", font, Brushes.Black, 210, 170);
+            graphics.DrawString($"Назначение: Оплата за курс '{kurs}'", font, Brushes.Black, 210, 210);
             graphics.DrawString($"ФИО плательщика: {plat}", font, Brushes.Black, 210, 250);
             graphics.DrawString($"Адрес плательщика: {adres}", font, Brushes.Black, 210, 290);
             graphics.DrawString("КБК: 0000000000130", font, Brushes.Black, 210, 330);
@@ -83,18 +87,17 @@ namespace documnets_demo
         {
             Random rnd = new Random();
             nmb = rnd.Next(1, 10000);
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Random();
-            kurs = comboBox1.Text;
-            obuh = textBox2.Text;
+            FIO = textBox1.Text;
+            kurs = textBox2.Text;
             plat = textBox3.Text;
             adres = textBox4.Text;
             sum = textBox5.Text;
-            img = DrawKvit(nmb, kurs, obuh, plat, adres, sum);
+            img = DrawKvit(nmb, kurs, FIO, plat, adres, sum);
             pictureBox1.Image = img;
         }
 
@@ -122,6 +125,7 @@ namespace documnets_demo
 
             adapter.UpdateCommand = new SqlCommandBuilder(adapter).GetUpdateCommand();
             dataGridView1.DataSource = table;
+            dataGridView1.Visible = true;
         }
 
         private void образовательнаяПрограммаToolStripMenuItem_Click(object sender, EventArgs e)
@@ -132,6 +136,7 @@ namespace documnets_demo
 
             adapter.UpdateCommand = new SqlCommandBuilder(adapter).GetUpdateCommand();
             dataGridView1.DataSource = table;
+            dataGridView1.Visible = true;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -142,6 +147,38 @@ namespace documnets_demo
         private void button3_Click(object sender, EventArgs e)
         {
             new Dogovor().Show();
+        }
+
+        private void договорToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            table = new DataTable();
+            adapter = new SqlDataAdapter("select * from Fiz_face2", DataBase.GetConnection());
+            adapter.Fill(table);
+
+            adapter.UpdateCommand = new SqlCommandBuilder(adapter).GetUpdateCommand();
+            dataGridView2.DataSource = table;
+            dataGridView2.Visible = true;
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            selectedrow = e.RowIndex;
+
+            if(e.ColumnIndex >=0)
+            {
+                DataGridViewRow row = dataGridView2.Rows[selectedrow];
+
+                textBox1.Text = row.Cells[1].Value.ToString();
+                textBox2.Text = row.Cells[2].Value.ToString();
+                textBox5.Text = row.Cells[3].Value.ToString();
+
+            }
+        }
+
+        private void скрытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Visible = false;
+            dataGridView2.Visible = false;
         }
     }
 }
